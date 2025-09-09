@@ -68,7 +68,7 @@ arm64_bpt_l3_pt0:
 arm64_bpt_l2_pt0:
 	ur_pte  arm64_bpt_l1_pt0, PTE_TYPE_TABLE
 	ur_pte  arm64_bpt_l1_pt1, PTE_TYPE_TABLE
-	pte_fill	0x0000000080000000, 254, 2, PTE_BLOCK_NORMAL_RW
+	pte_fill	0x0000000080000000, 254, 2, PTE_BLOCK_NORMAL_RWX
 	pte_fill	0x0000004000000000, 256, 2, PTE_BLOCK_DEVICE_nGnRnE
 
 /* L2: 512GiB - 1TiB (1GiB / entry)
@@ -116,4 +116,4 @@ arm64_bpt_l1_pt1:
 .align 12
 .globl arm64_bpt_l0_pt0
 arm64_bpt_l0_pt0:
-	pte_fill	0x0000000040000000, 512, 0, PTE_PAGE_NORMAL_RWX
+	pte_fill	0x0000000080000000, 512, 0, PTE_PAGE_NORMAL_RWX
