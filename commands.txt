@@ -1,0 +1,26 @@
+../tools/fiptool/fiptool create --tb-fw tb-fw.bin --soc-fw soc-fw.bin --tos-fw tos-fw.bin --tos-fw-extra1 tos-fw-extra1.bin --nt-fw c-hello_qemu-arm64 uk.bin
+dd if=bl1.bin of=flash.bin bs=4096 conv=notrunc
+dd if=extract/uk.bin of=flash.bin seek=64 bs=4096 conv=notrunc 
+
+make PLAT=qemu DEBUG=1 CROSS_COMPILE=aarch64-linux-gnu- BL32=/home/stefan/projects/unikraft/disertatie/optee_os/out/arm-plat-vexpress/core/tee-header_v2.bin BL32_EXTRA1=/home/stefan/projects/unikraft/disertatie/optee_os/out/arm-plat-vexpress/core/tee-pager_v2.bin BL32_EXTRA2=/home/stefan/projects/unikraft/disertatie/optee_os/out/arm-plat-vexpress/core/tee-pageable_v2.bin BL33=$(pwd)/bl33-min/bl33.elf BL32_RAM_LOCATION=tdram SPD=opteed all fip
+
+make PLAT=qemu DEBUG=1 CROSS_COMPILE=aarch64-linux-gnu- \
+        BL32=/home/stefan/projects/unikraft/disertatie/optee_os/out/arm-plat-vexpress/core/tee-header_v2.bin \
+        BL32_EXTRA1=/home/stefan/projects/unikraft/disertatie/optee_os/out/arm-plat-vexpress/core/tee-pager_v2.bin \
+        BL32_EXTRA2=/home/stefan/projects/unikraft/disertatie/optee_os/out/arm-plat-vexpress/core/tee-pageable_v2.bin \
+        BL33=$(pwd)/bl33-min/bl33.elf \
+        BL32_RAM_LOCATION=tdram \
+        SPD=opteed \
+        all fip
+
+qemu-system-aarch64 \
+        -machine virt,acpi=off,secure=on,mte=off,gic-version=2,virtualization=false \
+        -cpu max -m 2048 -nographic -semihosting  \
+        -bios flash.bin \
+        -device loader,file=/home/stefan/projects/unikraft/disertatie/catalog-core/c-stable/workdir/build/c-main_qemu-arm64,addr=0x800fffc0 \
+        -device loader,file=/home/stefan/projects/unikraft/disertatie/catalog-core/c-stable/qemu-virt.dtb,addr=0x70000000 \
+        -S -s
+
+make -j$(nproc) PLATFORM=vexpress-qemu_armv8a CFG_ARM64_core=y     CFG_TEE_CORE_LOG_LEVEL=3     CFG_TZDRAM_START=0x0E100000 CFG_TZDRAM_SIZE=0x02000000
+
+
