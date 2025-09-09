@@ -23,4 +23,4 @@ qemu-system-aarch64 \
 
 make -j$(nproc) PLATFORM=vexpress-qemu_armv8a CFG_ARM64_core=y     CFG_TEE_CORE_LOG_LEVEL=3     CFG_TZDRAM_START=0x0E100000 CFG_TZDRAM_SIZE=0x02000000
 
-
+booti 0x800fffc0 - 0x70000000
