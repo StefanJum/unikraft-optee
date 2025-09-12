@@ -74,6 +74,7 @@ void system_off(enum ukplat_gstate request __unused)
 	 * NO PSCI or invalid PSCI method, we can't do shutdown, just
 	 * halt the CPU.
 	 */
+	while (1);
 	__asm__("wfi");
 	__CPU_HALT();
 	if (!smccc_psci_call) {
